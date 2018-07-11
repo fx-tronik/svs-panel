@@ -106,14 +106,15 @@ class Zone_polygon(models.Model):
     def __str__(self):
         return str (self.zone) + ' | ' + str(self.point_no)
 
+# Model nie jest potrzebny - zone posiadają foreignkey origin_camera pozwalający na stworzenie relacji pomiedzy strefa a kamera
 
-class Camera_zone(models.Model): #reduntant?
+#class Camera_zone(models.Model): #reduntant?
 
-    camera = models.ForeignKey('Camera', on_delete=models.CASCADE)
-    zone = models.ForeignKey('Zone', on_delete=models.CASCADE)
+#    camera = models.ForeignKey('Camera', on_delete=models.CASCADE)
+#    zone = models.ForeignKey('Zone', on_delete=models.CASCADE)
 
-    def __str__(self):
-        return str(self.camera) + ' | ' + str(self.zone)
+#    def __str__(self):
+#        return str(self.camera) + ' | ' + str(self.zone)
 
 
 class Zone_goal(models.Model):
