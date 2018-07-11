@@ -176,10 +176,3 @@ class Zone_alert(models.Model):
 
     def __str__(self):
         return str(self.zone) + ' | ' + str(self.alert)
-
-
-class Test(models.Model):
-
-    id = models.AutoField(primary_key=True, null=False, unique=True)
-    name = models.CharField(max_length=100)
-    value = models.IntegerField(null=True, blank=True)
