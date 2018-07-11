@@ -15,7 +15,7 @@ class CustomMqttClient(mqtt.Client):
             super(CustomMqttClient, self)._handle_on_message(message)
         except Exception as e:
             error = {"exception": str(e.__class__.__name__), "message": str(e)}
-            self.publish("SVS_callback", json.dumps(error))
+            self.publish("ws-debug", json.dumps(error), qos=1)
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -24,10 +24,7 @@ def on_connect(client, userdata, flags, rc):
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     for topic in SUB_TOPICS:
-        client.subscribe(topic, qos=0)
-
-
-licznik = 0
+        client.subscribe(topic, qos=1)
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
