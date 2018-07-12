@@ -2,9 +2,7 @@ from .models import Infrasctructure
 import paho.mqtt.client as mqtt
 import json
 
-from .models import Test
-
-SUB_TOPICS = ("ws-arm-imp", "ws-arm-cr", "ws-arm-bas", "SVS_callback")
+SUB_TOPICS = ("ws-arm-imp", "ws-arm-cr", "ws-arm-bas", "SVS_callback1")
 RECONNECT_DELAY_SECS = 2
 
 
@@ -17,6 +15,7 @@ class CustomMqttClient(mqtt.Client):
             error = {"exception": str(e.__class__.__name__), "message": str(e)}
             self.publish("ws-debug", json.dumps(error), qos=1)
 
+
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
@@ -26,17 +25,27 @@ def on_connect(client, userdata, flags, rc):
     for topic in SUB_TOPICS:
         client.subscribe(topic, qos=1)
 
+
+def on_connect2(client, userdata, flags, rc):
+    print("Connected with result code " + str(rc))
+
+    # Subscribing in on_connect() means that if we lose the connection and
+    # reconnect then subscriptions will be renewed.
+    for topic in SUB_TOPICS:
+        client.subscribe("SVS_callback1", qos=1)
+
+
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
-
-    if msg.topic == "SVS_callback":
-        j = json.loads(str(msg.payload.decode("utf-8","ignore")))
+    if msg.topic == "SVS_callback1":
+        j = json.loads(str(msg.payload.decode("utf-8", "ignore")))
         for group in j:
             print(group)
             for i, value in enumerate(j[group]):
                 infrastructure, created = Infrasctructure.objects.get_or_create(type=group, no=i+1)
                 infrastructure.value = value
                 infrastructure.save()
+
 
 def on_publish(mosq, obj, mid):
     print("mid: " + str(mid))
@@ -45,8 +54,10 @@ def on_publish(mosq, obj, mid):
 def on_subscribe(mosq, obj, mid, granted_qos):
     print("Subscribed: " + str(mid) + " " + str(granted_qos))
 
+
 def on_log(mosq, obj, level, string):
     print(string)
+
 
 def on_disconnect(client, userdata, rc):
     client.loop_stop(force=False)
@@ -57,11 +68,20 @@ def on_disconnect(client, userdata, rc):
 
 
 client = CustomMqttClient()
+client2 = CustomMqttClient()
 client.on_connect = on_connect
 client.on_message = on_message
-client.on_publish = on_publish
+# client.on_publish = on_publish
 client.on_subscribe = on_subscribe
 client.on_disconnect = on_disconnect
 
-#client.username_pw_set(username, password)
+client2.on_connect = on_connect2
+client2.on_message = on_message
+# client2.on_publish = on_publish
+client2.on_subscribe = on_subscribe
+client2.on_disconnect = on_disconnect
+
+
+# client.username_pw_set(username, password)
 client.connect('192.168.0.200', 1885, 60)
+client2.connect('192.168.0.200', 1885, 60)
