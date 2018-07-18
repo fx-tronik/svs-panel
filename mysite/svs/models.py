@@ -36,6 +36,8 @@ class Camera(models.Model):
     login = models.CharField(max_length=50, null=True, blank=True)
     password = models.CharField(max_length=50, null=True, blank=True)
 
+    camera_type = models.ForeignKey('Camera_type', on_delete=models.SET_NULL, null=True)
+
     def __str__(self):
         return self.name
 
@@ -44,6 +46,15 @@ class Camera(models.Model):
 def Camera_added(sender, instance, created, **kwargs):
     if created:
         Zone.objects.create(origin_camera=instance, name="default")
+
+
+class Camera_type(models.Model):
+
+    camera_model = models.CharField(max_length=100)
+    custom_camera_url = models.URLField(blank=False, null=False, help_text="Use {admin} and {password} for creditentials")
+
+    def __str__(self):
+        return self.camera_model
 
 class Recognition_goal(models.Model):
 
