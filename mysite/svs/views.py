@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from .tasks import Test, Test1
 
+
+
+
 # Create your views here.
 def index(request):
 
@@ -13,6 +16,5 @@ def request_page(request):
         print('test')
     else:
         print('kapusta')
-        Test.apply_async()
-        Test1.apply_async()
+
     return render(request,'svs/index.html')
