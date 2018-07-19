@@ -6,7 +6,6 @@ from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 
 class Infrasctructure(models.Model):
-    """(Infrasctructure description)"""
 
     id = models.AutoField(primary_key=True, null=False, unique=True) #
 
@@ -36,7 +35,7 @@ class Camera(models.Model):
     login = models.CharField(max_length=50, null=True, blank=True)
     password = models.CharField(max_length=50, null=True, blank=True)
 
-    camera_type = models.ForeignKey('Camera_type', on_delete=models.SET_NULL, null=True)
+    camera_type = models.ForeignKey('Camera_type', related_name='camera_types', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.name
@@ -56,17 +55,6 @@ class Camera_type(models.Model):
     def __str__(self):
         return self.camera_model
 
-class Recognition_goal(models.Model):
-
-    id = models.AutoField(primary_key=True, null=False, unique=True)
-
-    type = models.CharField(max_length=50)
-    complexity = models.CharField(max_length=10)
-
-    def __str__(self):
-        return self.type
-
-
 # Cel jest zawsze przypisany do okreslonej strefy, dopiero strefy przypisujemy do kamer
 
 #class Camera_goal(models.Model):
@@ -83,14 +71,12 @@ class Recognition_goal(models.Model):
 
 class Zone(models.Model):
 
-    validator = RegexValidator(regex='^[\-a-zA-Z0-9]*$')
 
-    id = models.AutoField(primary_key=True, null=False, unique=True)
+    id = models.AutoField(primary_key=True, null=False, unique=True, )
 
-    #name = models.CharField(max_length=12, validators=[validator], unique=True)
     name = models.SlugField(max_length=12)
     max_human_silhouettes_no = models.PositiveIntegerField(null=True, blank=True)
-    origin_camera = models.ForeignKey('Camera', on_delete=models.CASCADE)
+    origin_camera = models.ForeignKey('Camera', related_name='zones', on_delete=models.CASCADE)
 
     class Meta:
         unique_together = (("name", "origin_camera"),)
@@ -98,10 +84,20 @@ class Zone(models.Model):
     def __str__(self):
         return str(self.origin_camera) + ' - ' + self.name
 
+class Recognition_goal(models.Model):
+
+    id = models.AutoField(primary_key=True, null=False, unique=True)
+
+    zone = models.ManyToManyField(Zone, related_name='goals')
+    type = models.CharField(max_length=50)
+    complexity = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.type
 
 class Zone_polygon(models.Model):
 
-    zone = models.ForeignKey('Zone', on_delete=models.CASCADE)
+    zone = models.ForeignKey('Zone', related_name='polygons', on_delete=models.CASCADE)
     point_no = models.AutoField(primary_key=True)
     #point_no = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     x = models.FloatField()
@@ -128,16 +124,16 @@ class Zone_polygon(models.Model):
 #        return str(self.camera) + ' | ' + str(self.zone)
 
 
-class Zone_goal(models.Model):
+#class Zone_goal(models.Model):
 
-    zone = models.ForeignKey('Zone', on_delete=models.CASCADE)
-    goal = models.ForeignKey('Recognition_goal', on_delete=models.CASCADE)
+#    zone = models.ForeignKey('Zone', related_name='zone', on_delete=models.CASCADE)
+#    goal = models.ForeignKey('Recognition_goal', related_name='goal', on_delete=models.CASCADE)
 
-    class Meta:
-        unique_together = (("zone", "goal"),)
+#    class Meta:
+#        unique_together = (("zone", "goal"),)
 
-    def __str__(self):
-        return str(self.zone) + ' | ' + str(self.goal)
+#    def __str__(self):
+#        return str(self.zone) + ' | ' + str(self.goal)
 
 
 class Component(models.Model):
@@ -170,6 +166,7 @@ class Component_action(models.Model):
 class Alert(models.Model):
 
     id = models.AutoField(primary_key=True, null=False, unique=True)
+    zone = models.ManyToManyField(Zone)
     description = models.CharField(max_length=100)
     excpression = models.CharField(max_length=50)
     type = models.CharField(max_length=12)
@@ -180,10 +177,10 @@ class Alert(models.Model):
         return self.description
 
 
-class Zone_alert(models.Model):
+#class Zone_alert(models.Model):
 
-    zone = models.ForeignKey('Zone', on_delete=models.CASCADE)
-    alert = models.ForeignKey('Alert', on_delete=models.CASCADE)
+#    zone = models.ForeignKey('Zone', on_delete=models.CASCADE)
+#    alert = models.ForeignKey('Alert', on_delete=models.CASCADE)
 
-    def __str__(self):
-        return str(self.zone) + ' | ' + str(self.alert)
+#    def __str__(self):
+#        return str(self.zone) + ' | ' + str(self.alert)

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from .models import (Infrasctructure, Camera, Recognition_goal,
-Zone, Zone_alert, Camera_type, Zone_polygon, Zone_goal, Component,
+Zone, Camera_type, Zone_polygon, Component,
 Action, Component_action, Alert)
 
 
@@ -14,16 +14,15 @@ class Zone_polygon_inline(admin.TabularInline):
     model = Zone_polygon
     extra = 0
 
-
-class Zone_goal_inline(admin.TabularInline):
-    model = Zone_goal
+class Recognition_goal_inline(admin.TabularInline):
+    model = Recognition_goal.zone.through
     extra = 0
 
-
 class ZoneAdmin(admin.ModelAdmin):
-    inlines = [Zone_polygon_inline, Zone_goal_inline]
+    inlines = [Zone_polygon_inline, Recognition_goal_inline]
 
 class CameraAdmin(admin.ModelAdmin):
+
     fieldsets = [
         ('Podstawowe dane', {'fields': ['name', 'ip', 'login', 'password']}),
         ('Typ kamery', {'fields': ['camera_type'],}),
@@ -39,7 +38,7 @@ admin.site.register(Infrasctructure)
 admin.site.register(Camera, CameraAdmin)
 admin.site.register(Recognition_goal)
 admin.site.register(Zone, ZoneAdmin)
-admin.site.register(Zone_alert)
+#admin.site.register(Zone_alert)
 admin.site.register(Component)
 admin.site.register(Action)
 admin.site.register(Component_action)
