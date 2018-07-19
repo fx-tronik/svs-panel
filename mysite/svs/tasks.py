@@ -1,6 +1,6 @@
 from mysite.celery import app
 from . import mqtt_client as mqtt
-
+from time import sleep
 
 from celery.five import monotonic
 from celery.utils.log import get_task_logger
@@ -28,3 +28,13 @@ def Test1():
 @app.task
 def printsomething():
     print('test')
+
+
+@app.task
+def mqtt_send(topic, payload):
+
+    send_client = mqtt.CustomMqttClient()
+    send_client.connect('192.168.0.200', 1885, 60)
+    send_client.publish(topic, payload, qos=1, retain=True)
+    sleep(0.01)
+    send_client.disconnect()

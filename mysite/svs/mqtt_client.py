@@ -57,7 +57,7 @@ def on_message(client, userdata, msg):
 
 def on_publish(mosq, obj, mid):
     print("mid: " + str(mid))
-
+    print('wyslalem')
 
 def on_subscribe(mosq, obj, mid, granted_qos):
     print("Subscribed: " + str(mid) + " " + str(granted_qos))
@@ -78,7 +78,7 @@ def on_disconnect(client, userdata, rc):
 client = CustomMqttClient()
 client.on_connect = on_connect_CV
 client.on_message = on_message
-# client.on_publish = on_publish
+client.on_publish = on_publish
 client.on_subscribe = on_subscribe
 client.on_disconnect = on_disconnect
 
