@@ -1,13 +1,12 @@
-from django import forms
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db import models
-from django.utils import timezone
-from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 
 class Infrasctructure(models.Model):
 
-    id = models.AutoField(primary_key=True, null=False, unique=True) #
+    id = models.AutoField(primary_key=True, null=False, unique=True)
 
     type = models.CharField(max_length=2)
     no = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(24)])
@@ -29,18 +28,20 @@ class Infrasctructure(models.Model):
 class Camera(models.Model):
 
     id = models.AutoField(primary_key=True, null=False, unique=True)
-    name = models.SlugField(max_length=12)
 
+    name = models.SlugField(max_length=12)
     ip = models.GenericIPAddressField(protocol='IPv4', default='0.0.0.0')
     login = models.CharField(max_length=50, null=True, blank=True)
     password = models.CharField(max_length=50, null=True, blank=True)
-
     camera_type = models.ForeignKey('Camera_type', related_name='camera_types', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.name
 
 
+# TODO We probably shouldnt create default zones for cameras that already have
+# zones, this might happen when camera is created from zone creation form -
+# origin_camera field
 @receiver(post_save, sender=Camera)
 def Camera_added(sender, instance, created, **kwargs):
     if created:
@@ -54,19 +55,6 @@ class Camera_type(models.Model):
 
     def __str__(self):
         return self.camera_model
-
-# Cel jest zawsze przypisany do okreslonej strefy, dopiero strefy przypisujemy do kamer
-
-#class Camera_goal(models.Model):
-#
-#    camera = models.ForeignKey('Camera', on_delete=models.CASCADE)
-#    goal = models.ForeignKey('Recognition_goal', on_delete=models.CASCADE)
-
-#    class Meta:
-#        unique_together = (("camera", "goal"),)
-
-#    def __str__(self):
-#        return str(self.camera) + ' | ' + str(self.goal)
 
 
 class Zone(models.Model):
@@ -114,28 +102,6 @@ class Zone_polygon(models.Model):
     def __str__(self):
         return str (self.zone) + ' | ' + str(self.point_no)
 
-# Model nie jest potrzebny - zone posiadają foreignkey origin_camera pozwalający na stworzenie relacji pomiedzy strefa a kamera
-
-#class Camera_zone(models.Model): #reduntant?
-
-#    camera = models.ForeignKey('Camera', on_delete=models.CASCADE)
-#    zone = models.ForeignKey('Zone', on_delete=models.CASCADE)
-
-#    def __str__(self):
-#        return str(self.camera) + ' | ' + str(self.zone)
-
-
-#class Zone_goal(models.Model):
-
-#    zone = models.ForeignKey('Zone', related_name='zone', on_delete=models.CASCADE)
-#    goal = models.ForeignKey('Recognition_goal', related_name='goal', on_delete=models.CASCADE)
-
-#    class Meta:
-#        unique_together = (("zone", "goal"),)
-
-#    def __str__(self):
-#        return str(self.zone) + ' | ' + str(self.goal)
-
 
 class Component(models.Model):
 
@@ -172,16 +138,8 @@ class Alert(models.Model):
     excpression = models.CharField(max_length=50)
     type = models.CharField(max_length=12)
     priority = models.CharField(max_length=10)
-    component_action = models.ForeignKey('Component_action', on_delete=models.CASCADE)
+    component_action = models.ForeignKey(
+        'Component_action', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.description
-
-
-#class Zone_alert(models.Model):
-
-#    zone = models.ForeignKey('Zone', on_delete=models.CASCADE)
-#    alert = models.ForeignKey('Alert', on_delete=models.CASCADE)
-
-#    def __str__(self):
-#        return str(self.zone) + ' | ' + str(self.alert)
