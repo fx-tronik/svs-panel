@@ -1,0 +1,46 @@
+{% extends "svs/base.html" %}
+(% load static %)
+{% block content %}
+<div id="divmain" style="position: relative; margin: auto; width: 1284px;">
+  <div id="divuppermenu" style="position: absolute; left: 10px; top: 10px; width: 1004px; height: 40px;">
+    <input id="btnopenimage" type="button" class="button" value="Open Image"/>
+    <input id="selectedFile" type="file" style="display: none;" />
+    <input id="btnopenimagefromdisk" type="button" value="Browse..."/>
+    <input id="btnclear" type=button value="Clear"/>
+    <input id="btnshow" type=button value="Show"/>
+    <input id="btnsave" type=button value="Save Config" style="position: relative; left: 100px;"/>
+  </div>
+  <div id="divcanvas" style="position: absolute; left: 0px; top: 50px; width: 1024px; height: 586px;">
+    <canvas id="canvasImg" width="1024" height="100" style="position: absolute;left: 0px; top: 0px; "></canvas>
+    <canvas id="canvasZones" width="1024" height="100" style="position: absolute;left: 0px; top: 0px; "></canvas>
+    <canvas id="canvasDraw" width="1024" height="100" style="position: absolute;left: 0px; top: 0px; "></canvas>
+  </div>
+  <div id="divzones" style="position: absolute; left: 1034px; top: 50px; width: 200px; height: 586px;">
+    <label class="CheckboxAddzones">
+      <input id="checkboxAddZone" type=checkbox value="Add Zone" type="checkbox"/>
+      <span></span>
+    </label>
+    <input id="btncanceldraw" type=button value="Cancel" style="position: absolute; left: 100px; top: 0px;"/>
+    <div id="divzonelist" style="position: absolute; left: 0px; top: 40px;">
+      Select Zone
+      <select id="selectZone" style="width: 100px;"></select><br>
+      <input id="btndeleteselected" type=button value="Delete Selected"/><br>
+      <input id="btndeleteall" type=button value="Delete All"/>
+    </div>
+    <div id="divzoneprop" style="position: absolute; left: 0px; top: 140px;">
+      Zone Properties<br>
+      Type
+      <select id="selectType" style="width: 100px;">
+        <option value="1">type 1</option>
+        <option value="2">type 2</option>
+        <option value="3">type 3</option>
+        <option value="4">type 4</option>
+        <option value="5">type 5</option>
+      </select><br>
+      Name
+      <input id="txtname" type="text">
+      <input id="btnupdate" type=button value="Update"/>
+    </div>
+  </div>
+</div>
+{% endblock %}

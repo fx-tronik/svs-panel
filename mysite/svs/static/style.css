@@ -1,0 +1,30 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-image: linear-gradient(#ffffff, #808080);
+}
+
+.CheckboxAddzones input {
+    display: none;
+}
+
+.CheckboxAddzones span {
+    width: 80px;
+    height: 21px;
+    border: 2px solid #d0d0d0;
+    display: block;
+    background: url("/static/cbAddZone_notchk.png");
+}
+
+.CheckboxAddzones span:hover {
+    border: 2px solid #000000;
+}
+
+.CheckboxAddzones input:checked + span {
+    background: url("/static/cbAddZone_chk.png");
+}

@@ -139,5 +139,6 @@ CACHES = {
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 BROKER_URL = 'amqp://myuser:mypassword@192.168.0.200:5672/myvhost'
 BROKER_POOL_LIMIT = None

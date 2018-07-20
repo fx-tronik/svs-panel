@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+    <head>
+      {% load static %}
+      <script src="{% static "js/jquery-3.3.1.js" %}"></script>
+      <link rel="stylesheet" href="{% static "style.css" %}">
+      {% if title %}
+      <title>SVS - {{ title }}</title>
+      {% else %}
+      <title>SVS</title>
+      {% endif %}
+    </head>
+    <body>
+        {% block content %}{% endblock %}
+    </body>
+    <script src="{% static "js/zones.js" %}"></script>
+</html>

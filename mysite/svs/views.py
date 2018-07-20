@@ -18,3 +18,7 @@ def request_page(request):
         mqtt_send.delay('ws-debug',str(payload))
         payload= payload+1
     return render(request,'svs/index.html')
+
+def zone_config(request):
+
+    return render(request, 'svs/ZoneConfig.html')
