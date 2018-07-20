@@ -16,8 +16,5 @@ def debug_task(self):
     print('Request: {0!r}'.format(self.request))
 
 
-@celeryd_init.connect()#sender='worker12@example.com')
-def testujemy(conf=None, **kwargs):
-    from svs.tasks import Test, Test1
-    Test.apply_async(task_id='t1')
-    Test1.apply_async(task_id='t2')
+#@celeryd_init.connect()#sender='worker12@example.com')
+#def testujemy(conf=None, **kwargs):

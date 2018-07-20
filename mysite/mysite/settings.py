@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_db_constraints',
     'django_celery_beat',
-    'rest_framework'
+    'rest_framework',
+    'distributedlock',
 ]
 
 MIDDLEWARE = [
@@ -142,3 +143,4 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 BROKER_URL = 'amqp://myuser:mypassword@192.168.0.200:5672/myvhost'
 BROKER_POOL_LIMIT = None
+DISTRIBUTEDLOCK_CLIENT="database"
