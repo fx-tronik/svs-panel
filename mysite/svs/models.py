@@ -50,7 +50,7 @@ def Camera_added(sender, instance, created, **kwargs):
 class Camera_type(models.Model):
 
     camera_model = models.CharField(max_length=100)
-    custom_camera_url = models.URLField(blank=False, null=False, help_text="Use {admin} and {password} for creditentials")
+    custom_camera_url = models.CharField(max_length=50, blank=False, null=False,help_text="Use {admin} and {password} for creditentials, and {ip} for adress of the webcam")
 
     def __str__(self):
         return self.camera_model

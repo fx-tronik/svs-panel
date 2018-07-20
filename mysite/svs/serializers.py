@@ -39,8 +39,9 @@ class CameraSerializer(serializers.ModelSerializer):
 
     def get_formatted_url(self, obj):
         if obj.login is not None and obj.password is not None:
-            return obj.camera_type.custom_camera_url.format(admin=obj.login, password=obj.password)
+            return obj.camera_type.custom_camera_url.format(admin=obj.login, password=obj.password, ip = obj.ip)
         else:
-            return obj.camera_type.custom_camera_url.replace("{admin}:{password}@", "")
+            data = obj.camera_type.custom_camera_url.replace("{admin}:{password}@", "")
+            return data.format(ip = obj.ip)
 
 #class WsDataSerializer():
