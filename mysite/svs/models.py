@@ -91,6 +91,7 @@ class Recognition_goal(models.Model):
     zone = models.ManyToManyField(Zone, related_name='goals')
     type = models.CharField(max_length=50)
     complexity = models.CharField(max_length=10)
+    agregator = models.CharField(max_length=50)
 
     def __str__(self):
         return self.type

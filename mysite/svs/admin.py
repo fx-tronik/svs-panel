@@ -1,8 +1,10 @@
 from django.contrib import admin
-from django import forms
-from .models import (Infrasctructure, Camera, Recognition_goal,
-Zone, Camera_type, Zone_polygon, Component,
-Action, Component_action, Alert)
+# from django import forms
+from .models import (
+    Infrasctructure, Camera, Recognition_goal,
+    Zone, Camera_type, Zone_polygon, Component,
+    Action, Component_action, Alert
+)
 
 
 # class MyForm(forms.ModelForm):
