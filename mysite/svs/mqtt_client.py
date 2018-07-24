@@ -89,5 +89,3 @@ client2.on_message = on_message
 # client2.on_publish = on_publish
 client2.on_subscribe = on_subscribe
 client2.on_disconnect = on_disconnect
-
-#client.connect('192.168.0.200', 1885, 60)

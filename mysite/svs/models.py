@@ -100,7 +100,7 @@ class Zone_polygon(models.Model):
         }
 
     def __str__(self):
-        return str (self.zone) + ' | ' + str(self.point_no)
+        return str(self.zone) + ' | ' + str(self.point_no)
 
 
 class Component(models.Model):
@@ -129,6 +129,7 @@ class Component_action(models.Model):
 
     def __str__(self):
         return str(self.component) + ' | ' + str(self.action)
+
 
 class Alert(models.Model):
 
