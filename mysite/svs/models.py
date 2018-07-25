@@ -141,7 +141,7 @@ class Alert(models.Model):
 
     zone = models.ManyToManyField(Zone)
     description = models.CharField(max_length=100)
-    excpression = models.CharField(max_length=50)
+    expression = models.CharField(max_length=50)
     type = models.CharField(max_length=12)
     priority = models.CharField(max_length=10)
     component_action = models.ForeignKey(
