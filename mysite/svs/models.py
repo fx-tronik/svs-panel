@@ -104,36 +104,50 @@ class Zone_polygon(models.Model):
         return str(self.zone) + ' | ' + str(self.point_no)
 
 
-class Component(models.Model):
+# W moim zrozumieniu są to elementy którymi może sterować SVS - wolne wyjścia
+# niewykorzystane przez wsad
+#class Component(models.Model):
+
+#    id = models.AutoField(primary_key=True, null=False, unique=True)
+
+#    name = models.CharField(max_length=20)
+
+#    def __str__(self):
+#        return str(self.name)
+
+
+class SVS_task(models.Model):
 
     id = models.AutoField(primary_key=True, null=False, unique=True)
-
-    name = models.CharField(max_length=20)
+    description = models.CharField(max_length=20, null=True)
+    svs_task = models.CharField(max_length=20)
 
     def __str__(self):
-        return str(self.name)
+        return self.description
+
+class SVS_output(models.Model):
+
+    id = models.AutoField(primary_key=True, null=False, unique=True)
+    description = models.CharField(max_length=20, null=True)
+    svs_id = models.IntegerField(unique=True)
+
+    def __str__(self):
+        return self.description
 
 
 class Action(models.Model):
 
     id = models.AutoField(primary_key=True, null=False, unique=True)
 
+    #svs_output = models.ManyToManyField(SVS_output)
     name = models.CharField(max_length=20)
+    svs_output = models.ForeignKey('SVS_output', related_name='output', on_delete=models.PROTECT, null=True)
+    svs_task = models.ForeignKey('SVS_task', related_name='task', on_delete=models.PROTECT, null=True)
     period = models.IntegerField(null=True, blank=True)
     unit = models.CharField(max_length=20, null=True, blank=True, default='ms')
 
     def __str__(self):
         return self.name
-
-
-class Component_action(models.Model):
-
-    component = models.ForeignKey('Component', on_delete=models.CASCADE)
-    action = models.ForeignKey('Action', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.component) + ' | ' + str(self.action)
-
 
 class Alert(models.Model):
 
@@ -144,8 +158,7 @@ class Alert(models.Model):
     expression = models.CharField(max_length=50)
     type = models.CharField(max_length=12)
     priority = models.CharField(max_length=10)
-    component_action = models.ForeignKey(
-        'Component_action', on_delete=models.CASCADE)
+    component_action = models.ManyToManyField('Action')
 
     def __str__(self):
         return self.description

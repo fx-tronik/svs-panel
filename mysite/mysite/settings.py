@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django_db_constraints',
     'django_celery_beat',
     'rest_framework',
-    'distributedlock',
+    #'distributedlock',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

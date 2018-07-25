@@ -2,8 +2,8 @@ from django.contrib import admin
 # from django import forms
 from .models import (
     Infrasctructure, Camera, Recognition_goal,
-    Zone, Camera_type, Zone_polygon, Component,
-    Action, Component_action, Alert
+    Zone, Camera_type, Zone_polygon, #Component,
+    Action, Alert, SVS_output, SVS_task
 )
 
 
@@ -46,8 +46,9 @@ admin.site.register(Camera, CameraAdmin)
 admin.site.register(Recognition_goal)
 admin.site.register(Zone, ZoneAdmin)
 # admin.site.register(Zone_alert)
-admin.site.register(Component)
+# admin.site.register(Component)
 admin.site.register(Action)
-admin.site.register(Component_action)
 admin.site.register(Alert)
 admin.site.register(Camera_type, Camera_typeAdmin)
+admin.site.register(SVS_output)
+admin.site.register(SVS_task)
