@@ -1,11 +1,12 @@
 from .models import Infrasctructure
 import paho.mqtt.client as mqtt
+from svs import mqtt_parse
 from .logger import logger
 
 import json
 
-SUB_TOPICS_CV = ("ws-arm-imp", "ws-arm-cr", "ws-arm-bas")
-SUB_TOPICS_ES = ("SVS_callback",)
+SUB_TOPICS_ES = ("ws-arm/*", "SVS_callback")
+SUB_TOPICS_CV = ("cv-ws/*",)
 RECONNECT_DELAY_SECS = 2
 
 
@@ -48,17 +49,8 @@ def on_connect_ES(client, userdata, flags, rc):
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
-    if msg.topic == "SVS_callback":
-        print(msg.payload)
-        j = json.loads(str(msg.payload.decode("utf-8", "ignore")))
-        for group in j:
-            print(group)
-            for i, value in enumerate(j[group]):
-                infrastructure, created = Infrasctructure.objects.get_or_create(type=group, no=i+1)
-                infrastructure.value = value
-                infrastructure.save()
-    elif msg.topic == "ws-arm-cr":
-        print(msg.payload)
+    mqtt_parse.mqtt_parser(msg.topic, msg.payload)
+
 
 def on_publish(mosq, obj, mid):
     logger.info('Message published')
