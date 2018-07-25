@@ -10,12 +10,10 @@ class Polygons_serializer(serializers.ModelSerializer):
 
 class GoalsSerializer(serializers.ModelSerializer):
 
-    #type = serializers.CharField()
-    #complexity = serializers.CharField()
-
     class Meta:
         model = Recognition_goal
         fields = ('type', 'agregator', 'complexity')
+
 
 class ZoneSerializer(serializers.ModelSerializer):
 

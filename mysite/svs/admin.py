@@ -16,12 +16,15 @@ class Zone_polygon_inline(admin.TabularInline):
     model = Zone_polygon
     extra = 0
 
+
 class Recognition_goal_inline(admin.TabularInline):
     model = Recognition_goal.zone.through
     extra = 0
 
+
 class ZoneAdmin(admin.ModelAdmin):
     inlines = [Zone_polygon_inline, Recognition_goal_inline]
+
 
 class CameraAdmin(admin.ModelAdmin):
 
@@ -30,17 +33,19 @@ class CameraAdmin(admin.ModelAdmin):
         ('Typ kamery', {'fields': ['camera_type'],}),
     ]
 
+
 class Camera_typeAdmin(admin.ModelAdmin):
 #         form = MyForm
         fieldsets = [
             ('Podstawowe dane', {'fields': ['camera_model', 'custom_camera_url'],}),
         ]
 
+
 admin.site.register(Infrasctructure)
 admin.site.register(Camera, CameraAdmin)
 admin.site.register(Recognition_goal)
 admin.site.register(Zone, ZoneAdmin)
-#admin.site.register(Zone_alert)
+# admin.site.register(Zone_alert)
 admin.site.register(Component)
 admin.site.register(Action)
 admin.site.register(Component_action)

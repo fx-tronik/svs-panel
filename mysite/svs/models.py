@@ -59,18 +59,18 @@ class Camera_type(models.Model):
 
 class Zone(models.Model):
 
-
     id = models.AutoField(primary_key=True, null=False, unique=True, )
 
     name = models.SlugField(max_length=12)
     max_human_silhouettes_no = models.PositiveIntegerField(null=True, blank=True)
     origin_camera = models.ForeignKey('Camera', related_name='zones', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.origin_camera) + ' - ' + self.name
+
     class Meta:
         unique_together = (("name", "origin_camera"),)
 
-    def __str__(self):
-        return str(self.origin_camera) + ' - ' + self.name
 
 class Recognition_goal(models.Model):
 
@@ -84,11 +84,12 @@ class Recognition_goal(models.Model):
     def __str__(self):
         return self.type
 
+
 class Zone_polygon(models.Model):
 
-    zone = models.ForeignKey('Zone', related_name='polygons', on_delete=models.CASCADE)
     point_no = models.AutoField(primary_key=True)
-    #point_no = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+
+    zone = models.ForeignKey('Zone', related_name='polygons', on_delete=models.CASCADE)
     x = models.FloatField()
     y = models.FloatField()
 
@@ -106,6 +107,7 @@ class Zone_polygon(models.Model):
 class Component(models.Model):
 
     id = models.AutoField(primary_key=True, null=False, unique=True)
+
     name = models.CharField(max_length=20)
 
     def __str__(self):
@@ -115,6 +117,7 @@ class Component(models.Model):
 class Action(models.Model):
 
     id = models.AutoField(primary_key=True, null=False, unique=True)
+
     name = models.CharField(max_length=20)
     period = models.IntegerField(null=True, blank=True)
     unit = models.CharField(max_length=20, null=True, blank=True, default='ms')
@@ -124,6 +127,7 @@ class Action(models.Model):
 
 
 class Component_action(models.Model):
+
     component = models.ForeignKey('Component', on_delete=models.CASCADE)
     action = models.ForeignKey('Action', on_delete=models.CASCADE)
 
@@ -134,6 +138,7 @@ class Component_action(models.Model):
 class Alert(models.Model):
 
     id = models.AutoField(primary_key=True, null=False, unique=True)
+
     zone = models.ManyToManyField(Zone)
     description = models.CharField(max_length=100)
     excpression = models.CharField(max_length=50)
