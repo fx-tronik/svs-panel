@@ -31,5 +31,5 @@ def mqtt_send(topic, payload):
     send_client = mqtt.CustomMqttClient()
     send_client.connect('192.168.0.200', 1885, 60)
     send_client.publish(topic, payload, qos=1, retain=True)
-    sleep(0.01)
+    sleep(0.1)
     send_client.disconnect()

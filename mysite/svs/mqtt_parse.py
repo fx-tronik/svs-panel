@@ -1,8 +1,8 @@
 import json
-from .models import Infrasctructure, Zone
+from .models import Infrasctructure, Zone, Alert
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from .logger import logger
-
+from . import tasks
 
 allowed_infrastuctures = ('DI', 'DO', 'AI', 'AO')
 
@@ -48,8 +48,14 @@ def human_silhouettes(payload):
             logger.critical(payload)
             return
         if int(data) > zone.max_human_silhouettes_no:
-            logger.critical("[PLACEHOLDER] Wykonaj akcje przypisane do strefy %s" % zone.__str__())
-
+            # logger.critical("[PLACEHOLDER] Wykonaj akcje przypisane do strefy %s" % zone.__str__())
+            for alert in Alert.objects.filter(zone=zone).all():
+                print(alert.description)
+                for component in alert.component_action.all():
+                    id = (component.svs_output.svs_id)
+                    task = (component.svs_task.svs_task)
+                    #tasks.mqtt_send.delay('ws-arm', 'kapusta')
+                    tasks.mqtt_send.delay('ws-arm', str(id) + ', ' + task)
 
 # Funckje zbierające tematy
 
