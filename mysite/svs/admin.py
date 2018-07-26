@@ -3,7 +3,7 @@ from django.contrib import admin
 from .models import (
     Infrasctructure, Camera, Recognition_goal,
     Zone, Camera_type, Zone_polygon, #Component,
-    Action, Alert, SVS_output, SVS_task
+    Action, Alert, ARM_output, ARM_task
 )
 
 
@@ -50,5 +50,5 @@ admin.site.register(Zone, ZoneAdmin)
 admin.site.register(Action)
 admin.site.register(Alert)
 admin.site.register(Camera_type, Camera_typeAdmin)
-admin.site.register(SVS_output)
-admin.site.register(SVS_task)
+admin.site.register(ARM_output)
+admin.site.register(ARM_task)

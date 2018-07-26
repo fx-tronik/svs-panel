@@ -116,20 +116,20 @@ class Zone_polygon(models.Model):
 #        return str(self.name)
 
 
-class SVS_task(models.Model):
+class ARM_task(models.Model):
 
     id = models.AutoField(primary_key=True, null=False, unique=True)
     description = models.CharField(max_length=20, null=True)
-    svs_task = models.CharField(max_length=20)
+    arm_task = models.CharField(max_length=20)
 
     def __str__(self):
         return self.description
 
-class SVS_output(models.Model):
+class ARM_output(models.Model):
 
     id = models.AutoField(primary_key=True, null=False, unique=True)
     description = models.CharField(max_length=20, null=True)
-    svs_id = models.IntegerField(unique=True)
+    arm_id = models.IntegerField(unique=True)
 
     def __str__(self):
         return self.description
@@ -141,8 +141,8 @@ class Action(models.Model):
 
     #svs_output = models.ManyToManyField(SVS_output)
     name = models.CharField(max_length=20)
-    svs_output = models.ForeignKey('SVS_output', related_name='output', on_delete=models.PROTECT, null=True)
-    svs_task = models.ForeignKey('SVS_task', related_name='task', on_delete=models.PROTECT, null=True)
+    arm_output = models.ForeignKey('ARM_output', related_name='output', on_delete=models.PROTECT, null=True)
+    arm_task = models.ForeignKey('ARM_task', related_name='task', on_delete=models.PROTECT, null=True)
     period = models.IntegerField(null=True, blank=True)
     unit = models.CharField(max_length=20, null=True, blank=True, default='ms')
 
