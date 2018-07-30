@@ -3,6 +3,7 @@ from .models import Infrasctructure, Zone, Alert
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from .logger import logger
 from . import tasks
+from mysite.celery import app
 
 allowed_infrastuctures = ('DI', 'DO', 'AI', 'AO')
 
@@ -25,11 +26,11 @@ def svs_callback(payload):
         else:
             logger.critical("Niedozwolony typ infrastruktury")
 
-
-def human_silhouettes(payload):
-
+def zones_counter(payload):
+    logger.debug(payload)
     try:
         dict = json.loads(str(payload.decode("utf-8", "ignore")))
+        dane = {'alerts': [] }
     except json.JSONDecodeError:
         logger.critical("Nieprawidlowy obiekt")
         return
@@ -47,15 +48,39 @@ def human_silhouettes(payload):
             logger.critical("Nieprawidlowy format wiadomości")
             logger.critical(payload)
             return
-        if int(data) > zone.max_human_silhouettes_no:
-            # logger.critical("[PLACEHOLDER] Wykonaj akcje przypisane do strefy %s" % zone.__str__())
-            for alert in Alert.objects.filter(zone=zone).all():
-                print(alert.description)
-                for component in alert.component_action.all():
-                    id = (component.svs_output.svs_id)
-                    task = (component.svs_task.svs_task)
-                    #tasks.mqtt_send.delay('ws-arm', 'kapusta')
-                    tasks.mqtt_send.delay('ws-arm', str(id) + ', ' + task)
+
+        if not zone is None:
+            if int(data) > zone.max_human_silhouettes_no:
+                logger.critical("[PLACEHOLDER] Wykonaj akcje przypisane do strefy %s" % zone.__str__())
+
+                for alert in Alert.objects.filter(zone=zone).all():
+                    dict1 = {}
+                    for component in alert.component_action.all():
+
+                        id = (component.arm_output.arm_id)
+                        task = (component.arm_task.arm_task)
+                        dict1['component-id'] = id
+                        dict1['action'] = task
+
+                    dane['alerts'].append(dict1)
+
+            else:
+                for alert in Alert.objects.filter(zone=zone).all():
+                    dict1 = {}
+                    for component in alert.component_action.all():
+
+                        id = (component.arm_output.arm_id)
+                        task = (component.arm_task.arm_task)
+                        dict1['component-id'] = id
+                        dict1['action'] = "off"
+
+                    dane['alerts'].append(dict1)
+
+
+    if len(dane['alerts']) > 0:
+        json_obj = json.dumps(dane)
+        tasks.mqtt_send.delay('ws-arm/alerts', json_obj)
+
 
 # Funckje zbierające tematy
 
@@ -64,7 +89,7 @@ def ws_arm_parse(topic, payload):
 
     switcher = {
         'svs_callback': lambda: svs_callback(payload),
-
+        'alerts': lambda: logger.info('loopback')
     }
 
     method = switcher.get(topic, lambda: logger.critical("Nieznany sub-topic %s" %topic))
@@ -74,14 +99,14 @@ def ws_arm_parse(topic, payload):
 def cv_ws_parse(topic, payload):
 
     switcher = {
-        'human_silhouettes': lambda: human_silhouettes(payload),
+        'zones_counter': lambda: zones_counter(payload),
 
     }
 
     method = switcher.get(topic, lambda: logger.critical("Nieznany sub-topic %s" %topic))
     return method()
 
-
+@app.task
 def mqtt_parser(topic, payload):
 
     main_topic, sub_topic = topic.split('/')
