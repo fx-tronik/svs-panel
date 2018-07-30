@@ -43,7 +43,7 @@ def on_connect_ES(client, userdata, flags, rc):
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     for topic in SUB_TOPICS_ES:
-        logger.info(topic)
+        logger.info("Subskrybuje do tematu " + topic)
         client.subscribe(topic, qos=1)
 
 
