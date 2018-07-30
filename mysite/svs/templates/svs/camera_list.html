@@ -1,0 +1,9 @@
+<h1>Camera</h1>
+<ul>
+{% for camera in object_list %}
+    <!-- <li>{{ article.pub_date|date }} - {{ article.headline }}</li> -->
+    {{ camera }}
+{% empty %}
+    <li>No articles yet.</li>
+{% endfor %}
+</ul>

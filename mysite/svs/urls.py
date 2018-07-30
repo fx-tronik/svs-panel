@@ -6,5 +6,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('cameras', responses.cameras, name='cameras'),
     path('request', views.request_page, name='request'),
-    path('zoneconfig', views.zone_config, name='Zones')
+    path('zoneconfig', views.zone_config, name='Zones'),
+    path('camera', views.CameraListView.as_view(), name='camera'),
+    path('video', views.video, name='video')
 ]
