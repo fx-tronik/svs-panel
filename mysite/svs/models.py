@@ -129,7 +129,7 @@ class ARM_output(models.Model):
 
     id = models.AutoField(primary_key=True, null=False, unique=True)
     description = models.CharField(max_length=20, null=True)
-    arm_id = models.IntegerField(unique=True)
+    arm_id = models.CharField(unique=True, max_length=20)
 
     def __str__(self):
         return self.description
