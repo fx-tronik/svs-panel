@@ -5,7 +5,7 @@ from .logger import logger
 
 import json
 
-SUB_TOPICS_ES = ("ws-arm/*", "SVS_callback")
+SUB_TOPICS_ES = ("ws-arm/*",)
 SUB_TOPICS_CV = ("cv-ws/*",)
 RECONNECT_DELAY_SECS = 2
 
